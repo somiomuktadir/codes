@@ -1,16 +1,25 @@
--- --- Exercise 1: Creating Tables and Adding Constraints ---
+/*
+ * SQL Table Data Management Exercises
+ * Demonstrates DDL (Data Definition Language) and DML (Data Manipulation Language)
+ * Covers: CREATE, ALTER, INSERT, SELECT, UPDATE, DELETE, DROP
+ */
 
--- 1. Create the employee table.
+-- ============================================
+-- EXERCISE 1: CREATING TABLES AND ADDING CONSTRAINTS
+-- ============================================
+
+-- 1. Create the employee table
 CREATE TABLE employee (
     employee_id SMALLINT UNSIGNED PRIMARY KEY,
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
     job_title VARCHAR(20),
-    salary DECIMAL(10,2),
+    salary DECIMAL(10, 2),
     department VARCHAR(20)
 );
 
--- 2. Create the project table, with a foreign key constraint.
+-- 2. Create the project table with a foreign key constraint
+-- Foreign keys ensure referential integrity between tables
 CREATE TABLE project (
     project_id SMALLINT UNSIGNED PRIMARY KEY,
     project_name VARCHAR(50),
@@ -18,41 +27,73 @@ CREATE TABLE project (
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
 );
 
--- --- Exercise 2: Modifying and Inserting Data ---
 
--- 1. Make employee_id in the employee table an AUTO_INCREMENT column.
-ALTER TABLE employee MODIFY employee_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY;
+-- ============================================
+-- EXERCISE 2: MODIFYING AND INSERTING DATA
+-- ============================================
 
--- 2. Insert the sample data into the employee table.
+-- 1. Make employee_id an AUTO_INCREMENT column
+-- AUTO_INCREMENT automatically generates unique IDs
+ALTER TABLE employee 
+MODIFY employee_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY;
+
+-- 2. Insert sample data into the employee table
+-- Using NULL for AUTO_INCREMENT columns lets MySQL generate the ID
 INSERT INTO employee (employee_id, first_name, last_name, job_title, salary, department) VALUES
 (NULL, 'Alice', 'Smith', 'Developer', 60000, 'IT'),
 (NULL, 'Bob', 'Brown', 'Manager', 75000, 'Sales');
 
--- --- Exercise 3: Querying Data ---
 
--- 1. Retrieve the first_name, last_name, and job_title of each employee.
-SELECT first_name, last_name, job_title FROM employee;
+-- ============================================
+-- EXERCISE 3: QUERYING DATA
+-- ============================================
 
--- 2. Retrieve employees with a salary greater than 65000.
-SELECT * FROM employee WHERE salary > 65000;
+-- 1. Retrieve specific columns for each employee
+SELECT first_name, last_name, job_title 
+FROM employee;
 
--- 3. Retrieve the project_name and employee_id from the project table for a specific employee_id (e.g., employee_id = 1).
-SELECT project_name, employee_id FROM project WHERE employee_id = 1;
+-- 2. Retrieve employees with a salary greater than 65000
+SELECT * 
+FROM employee 
+WHERE salary > 65000;
 
--- --- Exercise 4: Updating Data ---
+-- 3. Retrieve projects for a specific employee
+-- Replace employee_id = 1 with the desired employee ID
+SELECT project_name, employee_id 
+FROM project 
+WHERE employee_id = 1;
 
--- Update the salary of the employee with employee_id = 1 to 62000.
-UPDATE employee SET salary = 62000 WHERE employee_id = 1;
 
--- --- Exercise 5: Deleting Data ---
+-- ============================================
+-- EXERCISE 4: UPDATING DATA
+-- ============================================
 
--- Delete the project record where project_id = 1.
-DELETE FROM project WHERE project_id = 1;
+-- Update the salary of a specific employee
+-- Best practice: Always use WHERE clause to avoid updating all rows
+UPDATE employee 
+SET salary = 62000 
+WHERE employee_id = 1;
 
--- --- Exercise 6: Dropping Tables ---
 
--- Drop the project table.
+-- ============================================
+-- EXERCISE 5: DELETING DATA
+-- ============================================
+
+-- Delete a specific project record
+-- Best practice: Always use WHERE clause to avoid deleting all rows
+DELETE FROM project 
+WHERE project_id = 1;
+
+
+-- ============================================
+-- EXERCISE 6: DROPPING TABLES
+-- ============================================
+
+-- Drop tables in correct order (child table first, then parent)
+-- Must drop project table first due to foreign key constraint
+
+-- Drop the project table
 DROP TABLE project;
 
--- Drop the employee table.
+-- Drop the employee table
 DROP TABLE employee;
