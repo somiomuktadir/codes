@@ -1,27 +1,39 @@
 #include <stdio.h>
 
-int main(){
-    int p=0,f=0,count=1;
+int main(void) {
+    int passes = 0;
+    int failures = 0;
+    int student_counter = 1;
     int result;
 
-    while (count <= 10){
-        scanf("%d", &result);
-        if (result == 1){
-            p=p+1;
+    while (student_counter <= 10) {
+        printf("Enter result (1 = pass, 2 = fail): ");
+        
+        // Check if scanf successfully read an integer
+        if (scanf("%d", &result) != 1) {
+            // Clear the input buffer to prevent infinite loop on invalid input
+            while (getchar() != '\n');
+            printf("Invalid input. Please enter a number.\n");
+            continue; 
         }
-        else{
-            f=f+1;
-        }
-        count=count+1;
-    }
-    printf("%d\n",p);
-    printf("%d\n",f);
 
-    if (p>=9){
-        printf("Congo!\n");
+        if (result == 1) {
+            passes = passes + 1;
+        } else {
+            failures = failures + 1;
+        }
+
+        student_counter = student_counter + 1;
     }
-    else{
+
+    printf("Passed: %d\n", passes);
+    printf("Failed: %d\n", failures);
+
+    if (passes >= 9) {
+        printf("Congo!\n");
+    } else {
         printf("Meow!\n");
     }
+
     return 0;
 }
