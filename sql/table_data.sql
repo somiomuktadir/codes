@@ -39,9 +39,9 @@ MODIFY employee_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY;
 
 -- 2. Insert sample data into the employee table
 -- Using NULL for AUTO_INCREMENT columns lets MySQL generate the ID
-INSERT INTO employee (employee_id, first_name, last_name, job_title, salary, department) VALUES
-(NULL, 'Alice', 'Smith', 'Developer', 60000, 'IT'),
-(NULL, 'Bob', 'Brown', 'Manager', 75000, 'Sales');
+INSERT INTO employee (first_name, last_name, job_title, salary, department) VALUES
+('Alice', 'Smith', 'Developer', 60000, 'IT'),
+('Bob', 'Brown', 'Manager', 75000, 'Sales');
 
 
 -- ============================================
@@ -93,7 +93,7 @@ WHERE project_id = 1;
 -- Must drop project table first due to foreign key constraint
 
 -- Drop the project table
-DROP TABLE project;
+DROP TABLE IF EXISTS project;
 
 -- Drop the employee table
-DROP TABLE employee;
+DROP TABLE IF EXISTS employee;

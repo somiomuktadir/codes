@@ -16,10 +16,15 @@ int main() {
     printf("Enter grades one by one (enter -1 to finish):\n\n");
 
     // Get first grade
-    printf("Enter grade: ");
-    if (scanf("%d", &grade) != 1) {
-        printf("Error: Invalid input.\n");
-        return 1;
+    // Get first grade
+    while (1) {
+        printf("Enter grade: ");
+        if (scanf("%d", &grade) == 1) {
+            break;
+        } else {
+            printf("Error: Invalid input. Please enter an integer.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
     }
 
     // Continue reading grades until sentinel value (-1) is entered
@@ -32,10 +37,14 @@ int main() {
             grade_count++;
         }
 
-        printf("Enter grade: ");
-        if (scanf("%d", &grade) != 1) {
-            printf("Error: Invalid input.\n");
-            return 1;
+        while (1) {
+            printf("Enter grade: ");
+            if (scanf("%d", &grade) == 1) {
+                break;
+            } else {
+                printf("Error: Invalid input. Please enter an integer.\n");
+                while (getchar() != '\n'); // Clear input buffer
+            }
         }
     }
 

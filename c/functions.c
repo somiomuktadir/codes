@@ -12,10 +12,15 @@ int main() {
     int a, b, c;
     
     // Get three numbers from user
-    printf("Enter three integers separated by spaces: ");
-    if (scanf("%d%d%d", &a, &b, &c) != 3) {
-        printf("Error: Invalid input. Please enter three integers.\n");
-        return 1;
+    // Get three numbers from user
+    while (1) {
+        printf("Enter three integers separated by spaces: ");
+        if (scanf("%d%d%d", &a, &b, &c) == 3) {
+            break;
+        } else {
+            printf("Error: Invalid input. Please enter three integers.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
     }
     
     // Display result

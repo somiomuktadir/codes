@@ -18,7 +18,7 @@ CREATE TABLE accounts (
     balance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
     branch_code VARCHAR(10),
     city VARCHAR(50),
-    created_date DATE DEFAULT (CURRENT_DATE)
+    created_date DATE DEFAULT CURRENT_DATE
 );
 
 -- Transaction log table

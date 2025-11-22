@@ -25,19 +25,21 @@ int main() {
     while (student <= num_students) {
         printf("Student %d: ", student);
         if (scanf("%d", &result) != 1) {
-            printf("Error: Invalid input.\n");
-            return 1;
+            printf("Error: Invalid input. Please enter 1 (pass) or 0 (fail).\n");
+            while (getchar() != '\n'); // Clear input buffer
+            continue; // Ask again for the same student
         }
 
         if (result == 1) {
             passes++;
+            student++;
         } else if (result == 0) {
             failures++;
+            student++;
         } else {
-            printf("Warning: Invalid result. Please enter 1 or 0. Treating as fail.\n");
-            failures++;
+            printf("Warning: Invalid result. Please enter 1 or 0.\n");
+            // Do not increment student, loop will repeat for same student
         }
-        student++;
     }
 
     // Calculate pass rate

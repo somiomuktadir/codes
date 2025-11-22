@@ -9,27 +9,47 @@
 int main() {
     double num1, num2, result;
     char operation;
+    int valid_input;
 
     // Get first number
-    printf("Enter first number: ");
-    if (scanf("%lf", &num1) != 1) {
-        printf("Error: Invalid input for first number.\n");
-        return 1;
-    }
+    do {
+        printf("Enter first number: ");
+        if (scanf("%lf", &num1) == 1) {
+            valid_input = 1;
+        } else {
+            valid_input = 0;
+            printf("Error: Invalid input. Please enter a number.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
+    } while (!valid_input);
 
     // Get second number
-    printf("Enter second number: ");
-    if (scanf("%lf", &num2) != 1) {
-        printf("Error: Invalid input for second number.\n");
-        return 1;
-    }
+    do {
+        printf("Enter second number: ");
+        if (scanf("%lf", &num2) == 1) {
+            valid_input = 1;
+        } else {
+            valid_input = 0;
+            printf("Error: Invalid input. Please enter a number.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
+    } while (!valid_input);
 
     // Get operation
-    printf("Enter operation (+, -, *, /): ");
-    if (scanf(" %c", &operation) != 1) {
-        printf("Error: Invalid input for operation.\n");
-        return 1;
-    }
+    do {
+        printf("Enter operation (+, -, *, /): ");
+        if (scanf(" %c", &operation) == 1) {
+            if (operation == '+' || operation == '-' || operation == '*' || operation == '/') {
+                valid_input = 1;
+            } else {
+                valid_input = 0;
+                printf("Error: Invalid operator. Use +, -, *, or /.\n");
+            }
+        } else {
+            valid_input = 0;
+            while (getchar() != '\n'); // Clear input buffer
+        }
+    } while (!valid_input);
 
     // Perform calculation based on operation
     switch (operation) {
@@ -54,13 +74,8 @@ int main() {
                 printf("%.2lf / %.2lf = %.2lf\n", num1, num2, result);
             } else {
                 printf("Error: Division by zero is not allowed.\n");
-                return 1;
             }
             break;
-
-        default:
-            printf("Error: Invalid operator '%c'. Use +, -, *, or /\n", operation);
-            return 1;
     }
     
     return 0;

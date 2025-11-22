@@ -39,12 +39,12 @@ WHERE length >= 180;
 -- 3b. Select payments made on or after 05/27/2005
 SELECT payment_id, amount, payment_date
 FROM payment
-WHERE payment_date >= '2005-05-27';
+WHERE payment_date >= '2005-05-27 00:00:00';
 
 -- 3c. Select payments made specifically on 05/27/2005
 SELECT payment_id, amount, payment_date
 FROM payment
-WHERE DATE(payment_date) = '2005-05-27';
+WHERE payment_date >= '2005-05-27 00:00:00' AND payment_date < '2005-05-28 00:00:00';
 
 -- 3d. Select customers where last name begins with "S" and first name ends with "N"
 SELECT *
@@ -113,7 +113,9 @@ WHERE district IN ('California', 'England', 'Taipei', 'West Java');
 -- 6b. Select payments made on specific dates
 SELECT payment_id, amount, payment_date
 FROM payment
-WHERE DATE(payment_date) IN ('2005-05-25', '2005-05-27', '2005-05-29');
+WHERE (payment_date >= '2005-05-25 00:00:00' AND payment_date < '2005-05-26 00:00:00')
+   OR (payment_date >= '2005-05-27 00:00:00' AND payment_date < '2005-05-28 00:00:00')
+   OR (payment_date >= '2005-05-29 00:00:00' AND payment_date < '2005-05-30 00:00:00');
 
 -- 6c. Select films with specific ratings
 SELECT *
@@ -151,8 +153,8 @@ WHERE release_year BETWEEN 2005 AND 2010;
 -- 2.1. Find rentals from 2005 excluding May
 SELECT *
 FROM rental
-WHERE YEAR(rental_date) = 2005
-  AND MONTH(rental_date) <> 5;
+WHERE rental_date >= '2005-01-01 00:00:00' AND rental_date < '2006-01-01 00:00:00'
+  AND (rental_date < '2005-05-01 00:00:00' OR rental_date >= '2005-06-01 00:00:00');
 
 -- 2.2. Find movies not rated G or PG
 SELECT *

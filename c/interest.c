@@ -12,24 +12,37 @@ int main() {
     int year, num_years;
 
     // Get principal amount
-    printf("Enter principal amount: $");
-    if (scanf("%f", &principal) != 1 || principal <= 0) {
-        printf("Error: Invalid principal amount.\n");
-        return 1;
+    // Get principal amount
+    while (1) {
+        printf("Enter principal amount: $");
+        if (scanf("%f", &principal) == 1 && principal > 0) {
+            break;
+        } else {
+            printf("Error: Invalid principal amount. Please enter a positive number.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
     }
 
     // Get interest rate
-    printf("Enter annual interest rate (as decimal, e.g., 0.05 for 5%%): ");
-    if (scanf("%f", &rate) != 1 || rate < 0 || rate > 1) {
-        printf("Error: Invalid interest rate.\n");
-        return 1;
+    while (1) {
+        printf("Enter annual interest rate (as decimal, e.g., 0.05 for 5%%): ");
+        if (scanf("%f", &rate) == 1 && rate >= 0 && rate <= 1) {
+            break;
+        } else {
+            printf("Error: Invalid interest rate. Please enter a value between 0 and 1.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
     }
 
     // Get number of years
-    printf("Enter number of years: ");
-    if (scanf("%d", &num_years) != 1 || num_years <= 0) {
-        printf("Error: Invalid number of years.\n");
-        return 1;
+    while (1) {
+        printf("Enter number of years: ");
+        if (scanf("%d", &num_years) == 1 && num_years > 0) {
+            break;
+        } else {
+            printf("Error: Invalid number of years. Please enter a positive integer.\n");
+            while (getchar() != '\n'); // Clear input buffer
+        }
     }
 
     // Display results in table format

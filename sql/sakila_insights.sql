@@ -211,22 +211,16 @@ ORDER BY
 -- Uses: CTE (Common Table Expression) for improved readability
 -- ============================================
 
-WITH TotalInventory AS (
-    SELECT COUNT(*) AS total_count
-    FROM inventory
-)
 SELECT
     S.store_id,
     COUNT(I.inventory_id) AS store_inventory_count,
-    ROUND( (COUNT(I.inventory_id) * 100.0) / TI.total_count, 2) AS percentage_of_total_inventory
+    ROUND( (COUNT(I.inventory_id) * 100.0) / SUM(COUNT(I.inventory_id)) OVER(), 2) AS percentage_of_total_inventory
 FROM
     store S
 JOIN
     inventory I ON S.store_id = I.store_id
-CROSS JOIN
-    TotalInventory TI
 GROUP BY
-    S.store_id, TI.total_count
+    S.store_id
 ORDER BY
     store_inventory_count DESC;
 
