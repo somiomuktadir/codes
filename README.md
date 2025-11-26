@@ -16,13 +16,28 @@ The C programs are organized into the following categories:
 - **`hello.c`**: Basic Hello World program.
 - **`06_data_analysis/`**: Data analysis programs and datasets.
 
-### SQL Scripts (`sql/`)
+### Linear Algebra Library (`lin_alg/`)
+
+A C++ library for linear algebra operations:
+
+- **`Matrix.cpp` / `Matrix.h`**: Matrix class implementation.
+- **`VectorOps.h`**: Vector operations.
+- **`LinearSolver.cpp` / `LinearSolver.h`**: Solvers for linear systems.
+- **`Decomposer.cpp` / `Decomposer.h`**: Matrix decomposition algorithms (LU, QR, etc.).
+- **`Analysis.cpp` / `Analysis.h`**: Data analysis tools.
+- **`main.cpp`**: Entry point for testing and usage.
+
+### MySQL Scripts (`mysql/`)
 
 The SQL scripts demonstrate advanced database concepts using the Sakila sample database:
 
 - **`01_advanced_sakila_queries.sql`**: Complex joins, aggregations, and reporting queries.
 - **`02_window_functions_analytics.sql`**: Analytical queries using Window Functions and CTEs.
 - **`03_procedures_and_triggers.sql`**: Stored procedures and triggers for business logic.
+- **`sakila_insights.sql`**: Deep dive insights into the Sakila database.
+- **`exercise.sql`**: Practice exercises.
+- **`table_data.sql`**: Scripts for populating table data.
+- **`another.sql`**: Additional SQL examples.
 
 ## Usage
 
