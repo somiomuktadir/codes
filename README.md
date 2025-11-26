@@ -1,6 +1,6 @@
 # C and SQL Code Repository
 
-This repository contains a collection of C programs and SQL scripts designed for a university-level course.
+This repository contains a collection of C codes, C++ programs, and SQL scripts designed for a university-level course.
 
 ## Directory Structure
 
