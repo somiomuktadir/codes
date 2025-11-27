@@ -1,12 +1,3 @@
-# University Code Repository
-
-This repository serves as a comprehensive archive of programming assignments, algorithms, and system implementations developed for university-level computer science coursework. It encompasses a variety of domains including system programming in C, high-performance numerical computing in C++, and advanced database management with MySQL.
-
-## Repository Structure
-
-The codebase is organized into three primary modules, each focusing on a specific technical domain.
-
-### 1. System Programming & Algorithms (`c/`)
 
 A collection of C programs demonstrating core computer science concepts, from memory management to advanced algorithms.
 
@@ -29,7 +20,20 @@ A high-performance C++ library designed for advanced linear algebra operations. 
 
 *For detailed documentation, refer to the [Linear Algebra README](lin_alg/README.md).*
 
-### 3. Database Management (`mysql/`)
+### 3. Statistics Analysis Library (`statistics/`)
+
+A comprehensive C++ library for statistical analysis covering both univariate and bivariate statistics. Features an interactive CLI tool for:
+
+-   **Univariate Statistics**: Mean, median, mode, variance, standard deviation, skewness, kurtosis, quantiles, and frequency distributions.
+-   **Bivariate Statistics**: Pearson/Spearman/Kendall correlation, covariance, and linear regression with predictions.
+-   **Hypothesis Testing**: One-sample, two-sample, and paired t-tests with confidence intervals and p-values.
+-   **Data Transformations**: Z-score standardization, min-max normalization, trimmed mean, and mathematical transforms.
+-   **File I/O**: CSV import/export with header support.
+-   **Educational Mode**: Verbose toggle for step-by-step calculation insights.
+
+*For detailed documentation, refer to the [Statistics README](statistics/README.md).*
+
+### 4. Database Management (`mysql/`)
 
 A series of advanced SQL scripts designed for the Sakila sample database, demonstrating complex business logic and analytics.
 
@@ -55,6 +59,15 @@ Navigate to the `lin_alg` directory and build the project:
 cd lin_alg
 make
 ./linear_algebra
+```
+
+### Running the Statistics Tool
+Navigate to the `statistics` directory and build the project:
+
+```bash
+cd statistics
+make
+./statistics
 ```
 
 ### Executing SQL Scripts

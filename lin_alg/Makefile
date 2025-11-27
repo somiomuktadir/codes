@@ -1,12 +1,19 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG
-TARGET = linear_algebra
+CXXFLAGS = -std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG -Iinclude
+LDFLAGS = -lm
+
+# Directories
+SRC_DIR = src
+INCLUDE_DIR = include
+OBJ_DIR = obj
+BIN_DIR = bin
+
+# Target executable
+TARGET = $(BIN_DIR)/linear_algebra
 
 # Source files
-SRCS = main.cpp Matrix.cpp Analysis.cpp Decomposer.cpp LinearSolver.cpp \
-       SparseMatrix.cpp IterativeSolvers.cpp MatrixMarket.cpp
-
-OBJS = $(SRCS:.cpp=.o)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Library detection
 LIBS =
@@ -33,27 +40,31 @@ else
     $(info [INFO] OpenMP not available)
 endif
 
-# Default target with auto-detection
+# Default target
 all: $(TARGET)
-	@echo "Build complete. Optimizations enabled: $(DEFINES)"
+	@echo "Build complete. Executable is at $(TARGET)"
+
+$(TARGET): $(OBJS) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(DEFINES) -o $@ $(OBJS) $(LIBS) $(LDFLAGS)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(DEFINES) -c $< -o $@
+
+$(BIN_DIR) $(OBJ_DIR):
+	mkdir -p $@
+
+clean:
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	@echo "Cleaned build artifacts"
 
 # Build without optional libraries
 basic:
 	@echo "Building basic version without BLAS/LAPACK/OpenMP..."
-	$(MAKE) DEFINES="" LIBS="" CXXFLAGS="-std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG"
+	$(MAKE) DEFINES="" LIBS="" CXXFLAGS="-std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG -Iinclude"
 
 # Build with all optimizations (force)
 full:
 	@echo "Building full version with all optimizations..."
-	$(MAKE) DEFINES="-DUSE_BLAS -DUSE_LAPACK" LIBS="-lblas -llapack" CXXFLAGS="-std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG -fopenmp"
-
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(DEFINES) -o $(TARGET) $(OBJS) $(LIBS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(DEFINES) -c $< -o $@
-
-clean:
-	rm -f $(OBJS) $(TARGET)
+	$(MAKE) DEFINES="-DUSE_BLAS -DUSE_LAPACK" LIBS="-lblas -llapack" CXXFLAGS="-std=c++17 -Wall -Wextra -O3 -march=native -DNDEBUG -Iinclude -fopenmp"
 
 .PHONY: all basic full clean

@@ -1,0 +1,19 @@
+# Build artifacts
+*.o
+test
+statistics
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keep sample data files
+!test_data.csv
+!test_bivariate.csv

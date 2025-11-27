@@ -1,12 +1,8 @@
-# Linear Algebra CLI Tool
+# Linear Algebra Library - Professional Edition
 
-A high-performance, comprehensive C++ library and command-line interface for advanced linear algebra operations. This tool is designed for educational and practical purposes, offering step-by-step algorithmic explanations alongside robust numerical computations.
+A high-performance C++17 linear algebra library featuring dense/sparse matrix operations, advanced decompositions, iterative solvers, and numerical analysis tools.
 
-## Overview
-
-The Linear Algebra CLI Tool provides a suite of operations ranging from basic matrix arithmetic to complex decompositions and iterative solvers. It is built with performance in mind, utilizing contiguous memory storage, cache-friendly access patterns, and optional BLAS/OpenMP integration.
-
-## Key Features
+## Features
 
 ### Core Matrix Operations
 -   **Arithmetic**: Addition, subtraction, multiplication, and scalar operations.
