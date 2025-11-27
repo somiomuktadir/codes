@@ -13,7 +13,8 @@ namespace Menu {
         #ifdef _WIN32
             system("cls");
         #else
-            system("clear");
+            int ret = system("clear");
+            (void)ret;
         #endif
     }
 

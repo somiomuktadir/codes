@@ -229,7 +229,7 @@ namespace Distributions {
             return num / den;
         }
 
-        double fDistributionMean(int d1, int d2) {
+        double fDistributionMean(int /*d1*/, int d2) {
             if (d2 <= 2) return std::numeric_limits<double>::quiet_NaN();
             return (double)d2 / (d2 - 2);
         }
