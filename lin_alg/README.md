@@ -1,119 +1,83 @@
 # Linear Algebra CLI Tool
 
-A comprehensive, high-performance command-line tool for linear algebra operations with step-by-step explanations. Supports matrix arithmetic, decompositions, eigenvalue computations, statistical analysis, file I/O, and advanced matrix manipulation.
+A high-performance, comprehensive C++ library and command-line interface for advanced linear algebra operations. This tool is designed for educational and practical purposes, offering step-by-step algorithmic explanations alongside robust numerical computations.
 
-## Features
+## Overview
 
-### Matrix Operations
-- **Basic Arithmetic**: Addition, Subtraction, Multiplication, Scalar Multiplication
-- **Transpose**: Matrix transposition
-- **Power**: Fast exponentiation using binary exponentiation
-- **Rank & Trace**: Compute matrix rank and trace
-- **RREF**: Reduced Row Echelon Form
-- **Condition Number**: Ratio of largest to smallest singular value
-- **Hadamard Product**: Element-wise multiplication
-- **Apply Functions**: Element-wise function application (sin, cos, exp, square, sqrt, abs)
+The Linear Algebra CLI Tool provides a suite of operations ranging from basic matrix arithmetic to complex decompositions and iterative solvers. It is built with performance in mind, utilizing contiguous memory storage, cache-friendly access patterns, and optional BLAS/OpenMP integration.
 
-### Matrix Manipulation
-- **Submatrix Extraction**: Extract any rectangular region
-- **Horizontal Stack**: Concatenate matrices side-by-side
-- **Vertical Stack**: Concatenate matrices top-to-bottom
-- **Resize**: Change matrix dimensions with optional fill value
-- **Comparison**: Equality and inequality operators
+## Key Features
 
-### Vector Operations
-- **Dot Product**: Inner product of two vectors
-- **Norm**: Euclidean norm (L2 norm)
-- **Cross Product**: Cross product for 3D vectors
-- **Normalization**: Unit vector computation
-- **Angle**: Angle between two vectors
-- **Projection**: Vector projection
-- **Outer Product**: Outer product of two vectors
+### Core Matrix Operations
+-   **Arithmetic**: Addition, subtraction, multiplication, and scalar operations.
+-   **Element-wise Operations**: Hadamard product and function application (sin, cos, exp, etc.).
+-   **Manipulation**: Submatrix extraction, horizontal/vertical stacking, and resizing.
+-   **Vector Operations**: Dot product, L2 norm, cross product (3D), and projection.
 
-### Linear Systems
-- **Gaussian Elimination**: Solve $Ax = b$ with partial pivoting
-- **Cholesky Solver**: Optimized solver for symmetric positive-definite systems
-- **Least Squares**: Solve overdetermined systems $Ax = b$ using QR decomposition
-- **Iterative Refinement**: Improve solution accuracy through iterative refinement
-- **Determinant**: Compute determinant using Gaussian elimination
-- **Matrix Inverse**: Find inverse using Gauss-Jordan elimination
+### Advanced Decompositions
+-   **LU Decomposition**: $PA = LU$ factorization with partial pivoting.
+-   **Cholesky Decomposition**: $A = LL^T$ for symmetric positive-definite matrices.
+-   **QR Decomposition**: $A = QR$ using Modified Gram-Schmidt orthogonalization.
+-   **Eigendecomposition**:
+    -   QR Algorithm with Hessenberg reduction for full spectrum analysis.
+    -   Power Iteration for dominant eigenvalue estimation.
+    -   Schur Decomposition for upper triangular forms.
+-   **Singular Value Decomposition (SVD)**: $A = U\Sigma V^T$ via Golub-Kahan Bidiagonalization.
+-   **Diagonalization**: $A = PDP^{-1}$ spectral decomposition.
 
-### Decompositions
-- **LU Decomposition**: $A = LU$ factorization with partial pivoting
-  - Also supports PLU decomposition: $PA = LU$ where $P$ is a permutation matrix
-- **Cholesky Decomposition**: $A = LL^T$ for positive-definite matrices
-- **QR Decomposition**: $A = QR$ using Modified Gram-Schmidt orthogonalization
-- **Eigendecomposition**: 
-  - Full eigendecomposition using QR algorithm with Hessenberg reduction
-  - Power iteration for dominant eigenvalue/eigenvector
-  - Schur decomposition for upper triangular form
-- **SVD**: Singular Value Decomposition $A = U\Sigma V^T$
-  - Uses Golub-Kahan Bidiagonalization for improved numerical stability
-- **Diagonalization**: Express $A = PDP^{-1}$ where $D$ is diagonal
+### Linear System Solvers
+-   **Direct Solvers**:
+    -   Gaussian Elimination with partial pivoting.
+    -   Cholesky Solver for symmetric positive-definite systems.
+    -   Least Squares solver for overdetermined systems via QR.
+-   **Iterative Solvers**:
+    -   **Conjugate Gradient (CG)**: Optimized for symmetric positive-definite systems.
+    -   **GMRES**: Generalized Minimal Residual method for non-symmetric systems.
+    -   **Preconditioning**: Jacobi preconditioner support for improved convergence.
 
-### Analysis & Statistics
-- **PCA**: Principal Component Analysis for dimensionality reduction
-- **Rank**: Matrix rank computation
-- **Trace**: Sum of diagonal elements
-- **Condition Number**: Measure of matrix sensitivity to perturbations
+### Sparse Matrix Support
+Efficient handling of large, sparse datasets using compressed storage formats:
+-   **CSR (Compressed Sparse Row)**: Optimized for row-wise operations and matrix-vector multiplication.
+-   **CSC (Compressed Sparse Column)**: Optimized for column-wise operations.
+-   **Operations**: Memory-efficient arithmetic and seamless conversion between dense and sparse formats.
+-   **I/O**: Support for the NIST Matrix Market (`.mtx`) format.
 
-### File I/O
-- **Save to CSV**: Export matrices to comma-separated value files
-- **Load from CSV**: Import matrices from CSV files
-- **Matrix Market Format**: NIST-compliant .mtx file format support
-  - Coordinate format (sparse matrices)
-  - Array format (dense matrices)
-  - Symmetric/Hermitian/Skew-symmetric patterns
-- High-precision output (15 decimal places) for numerical accuracy
+### Complex Number Support
+Full support for complex-valued matrices:
+-   **Arithmetic**: Complex addition, multiplication, and scalar operations.
+-   **Hermitian Operations**: Conjugate transpose and Hermitian property verification.
 
-### Sparse Matrices (NEW)
-- **CSR Format**: Compressed Sparse Row for efficient row-wise operations
-- **CSC Format**: Compressed Sparse Column for efficient column-wise operations
-- **Automatic Conversion**: Dense to sparse and sparse to dense
-- **Sparse Arithmetic**: Addition, scalar multiplication, matrix-vector products
-- **Memory Efficient**: ~90% memory savings for matrices with >90% zeros
-- **Statistics**: Sparsity percentage and memory usage reporting
+### Data Analysis & Statistics
+-   **Principal Component Analysis (PCA)**: Dimensionality reduction and feature extraction.
+-   **Matrix Statistics**: Computation of rank, trace, and condition number.
 
-### Iterative Solvers (NEW)
-- **Conjugate Gradient (CG)**: For symmetric positive-definite systems
-  - Optimized for both dense and sparse matrices
-  - Convergence monitoring with residual tracking
-- **GMRES**: Generalized Minimal Residual for general systems
-  - Restarted GMRES(m) with adjustable restart parameter
-  - Arnoldi iteration with Modified Gram-Schmidt
-- **Preconditioned CG**: Jacobi preconditioner for improved convergence
-- User-configurable tolerance and maximum iterations
+## Technical Highlights
 
-### Complex Matrices (NEW)
-- **Complex Arithmetic**: Addition, subtraction, multiplication with complex numbers
-- **Conjugate Transpose**: Hermitian transpose operations
-- **Hermitian Detection**: Automatic verification of Hermitian matrices
-- **Complex Scalars**: Support for complex scalar multiplication
-- Formatted output with real and imaginary components
+-   **Performance**:
+    -   **Flat Storage**: Uses `std::vector<double>` for contiguous memory layout, improving cache locality.
+    -   **Parallelization**: Optional OpenMP support for multi-threaded operations on large matrices.
+    -   **BLAS Integration**: Optional linkage with BLAS libraries for accelerated matrix multiplication.
+-   **Numerical Stability**:
+    -   Uses Modified Gram-Schmidt for QR decomposition.
+    -   Implements Golub-Kahan Bidiagonalization for SVD.
+    -   Includes iterative refinement for linear system solutions.
+-   **Verbose Mode**: A unique educational feature that logs detailed, step-by-step algorithmic progress (e.g., row operations, convergence steps) to the console.
 
-### Performance Optimizations (NEW)
-- **BLAS Integration** (Optional): 5-10x faster matrix multiplication via `cblas_dgemm`
-  - Automatic detection at compile time
-  - Graceful fallback to native implementation
-- **OpenMP Parallelization** (Optional): Multi-threaded matrix operations
-  - Automatic thread scaling for large matrices (>100×100)
-  - Enabled at compile time if OpenMP available
+## Building the Project
 
-### Verbose Mode
-- **Step-by-Step Explanations**: Toggle verbose mode (Option 9) to see detailed algorithmic steps
-- Logs row operations during Gaussian elimination
-- Shows convergence progress for iterative methods
-- Displays intermediate results for decompositions
+The project uses a standard `Makefile` for compilation.
 
-## Building
+### Prerequisites
+-   A C++17 compatible compiler (GCC, Clang).
+-   (Optional) OpenMP and BLAS for performance enhancements.
 
-To build the project, simply run:
+### Compilation
+
+To build the release version with optimizations:
 
 ```bash
-make
+make full
 ```
-
-This compiles all source files with optimizations (`-O3 -march=native`) and creates the `linear_algebra` executable.
 
 To clean build artifacts:
 
@@ -121,199 +85,71 @@ To clean build artifacts:
 make clean
 ```
 
-## Running
+## Usage
 
-Start the program with:
+Run the interactive command-line interface:
 
 ```bash
 ./linear_algebra
 ```
 
-## Usage Examples
+### CLI Menu Structure
 
-### Example 1: Creating Matrices with Modern C++
+The interactive menu provides access to all features:
 
-```cpp
-// In your code (if using as a library):
-using namespace LinAlg;
-Matrix A = {{1, 2}, {3, 4}};  // Initializer list
-Matrix B(3, 3, 5.0);           // 3x3 matrix filled with 5.0
-```
+1.  **Matrix Operations**: Basic arithmetic, transpose, power.
+2.  **Vector Operations**: Dot/cross products, norms.
+3.  **Linear Solver**: Direct solvers (Gaussian, Cholesky, Least Squares).
+4.  **Determinant & Inverse**: Matrix inversion and determinant calculation.
+5.  **Decompositions**: LU, QR, Cholesky, Eigen, SVD.
+6.  **Analysis**: PCA, Rank, Condition Number.
+7.  **File I/O**: CSV and Matrix Market import/export.
+8.  **Matrix Manipulation**: Resizing, stacking, submatrices.
+9.  **Toggle Verbose Mode**: Enable/disable educational logging.
+10. **Sparse Matrices**: CSR/CSC operations and statistics.
+11. **Iterative Solvers**: CG and GMRES methods.
+12. **Complex Matrices**: Complex arithmetic and Hermitian checks.
 
-### Example 2: File I/O
+### Example: Solving a Linear System
 
-```
-Select option: 7
-1. Save to CSV  2. Load from CSV
-1
-Enter dimensions for Matrix A (rows cols): 2 2
-Enter elements row by row:
-1 2
-3 4
-Enter filename: matrix.csv
-Matrix saved to matrix.csv
-
-# Later...
-Select option: 7
-2
-Enter filename: matrix.csv
-Loaded matrix:
-[ 1.0000 2.0000 ]
-[ 3.0000 4.0000 ]
-```
-
-### Example 3: Matrix Manipulation
-
-```
-Select option: 8
-1. Submatrix  2. Horizontal Stack  3. Vertical Stack  4. Apply Function
-4
-Enter dimensions for Matrix A (rows cols): 2 2
-Enter elements row by row:
-0 1.57
-3.14 0
-Functions: 1. sin  2. cos  3. exp  4. square  5. sqrt  6. abs
-1
-Result:
-[ 0.0000 1.0000 ]
-[ 0.0016 0.0000 ]
-```
-
-### Example 4: Cholesky Solver (Fast for SPD Systems)
-
-```
+```bash
 Select option: 3
 1. Standard  2. Cholesky (for SPD)  3. Least Squares  4. Refined
-2
-Enter dimensions for Matrix A (rows cols): 2 2
-Enter elements row by row:
-4 2
-2 3
-Enter size for Vector b: 2
-Enter elements: 6 5
-Solution x: ( 1.0000 1.0000 )
-```
-
-### Example 5: Eigendecomposition with Verbose Mode
-
-```
-Select option: 9  # Toggle verbose mode ON
-Select option: 5  # Decompositions
-4
-1. Full Eigendecomposition (QR)  2. Dominant Eigenvalue (Power Iteration)
 1
 Enter dimensions for Matrix A (rows cols): 2 2
 Enter elements row by row:
-4 1
-2 3
-
-[STEP] Starting Eigen Decomposition (QR Algorithm)
-[STEP] Starting QR Decomposition (Modified Gram-Schmidt)
-...
-[STEP] Converged at iteration 5
-[STEP] Matrix is symmetric, Q contains eigenvectors
-Eigenvalues:
-[ 5.0000 0.0000 ]
-[ 0.0000 2.0000 ]
-Eigenvectors:
-[ 0.8944 -0.4472 ]
-[ 0.4472 0.8944 ]
-```
-
-## Technical Details
-
-### Performance Optimizations
-- **Flat Storage**: Matrices use contiguous memory (`vector<double>`) instead of `vector<vector<double>>` for ~30% performance improvement
-- **Cache-Friendly Multiplication**: Uses ikj loop ordering for better cache locality
-- **Move Semantics**: Default move constructors for efficient matrix transfers
-
-### Algorithms
-- **Gaussian Elimination**: Partial pivoting for numerical stability
-- **Hessenberg Reduction**: Reduces matrices to Hessenberg form before QR iteration
-- **QR Algorithm**: Iterative Schur decomposition with back-substitution for eigenvectors
-- **Modified Gram-Schmidt**: More numerically stable than classical Gram-Schmidt
-- **Power Iteration**: Rayleigh quotient for dominant eigenvalue estimation
-- **Cholesky**: Specialized factorization for SPD matrices ($O(n^3/3)$ vs $O(2n^3/3)$ for LU)
-- **Golub-Kahan Bidiagonalization**: Two-sided orthogonal reduction for SVD computation
-
-### Numerical Precision
-- **Tolerance**: `1e-10` for convergence checks
-- **Pivot threshold**: `1e-10` for singularity detection
-- **Maximum iterations**: `1000` for iterative methods
-- **CSV precision**: 15 decimal places
-
-### Matrix Support
-- **Symmetric matrices**: Optimized eigenvector computation
-- **Non-symmetric matrices**: Back-substitution from Schur form
-- **Positive-definite matrices**: Cholesky decomposition and solver
-- **Rectangular matrices**: SVD and QR decomposition
-- **Sparse matrices**: Not yet optimized (future work)
-
-## Project Structure
-
-```
-.
-├── main.cpp           # CLI interface and menu system
-├── Matrix.h/cpp       # Matrix class with flat storage and operations
-├── VectorOps.h        # Vector operations (header-only, nested namespace)
-├── LinearSolver.h/cpp # Linear systems, determinant, inverse, Cholesky
-├── Decomposer.h/cpp   # Matrix decompositions (LU, QR, Eigen, SVD, Cholesky)
-├── Analysis.h/cpp     # PCA, diagonalization, transformations
-├── Logger.h           # Step-by-step logging (header-only)
-├── Makefile           # Build configuration
-└── README.md          # This file
+2 1
+1 3
+Enter size for Vector b: 2
+Enter elements: 4 7
+Solution x: ( 1.0000 2.0000 )
 ```
 
 ## API Reference
 
-### Namespace
-
-All classes are in the `LinAlg` namespace:
+The library is encapsulated within the `LinAlg` namespace.
 
 ```cpp
+#include "Matrix.h"
+#include "LinearSolver.h"
+
 using namespace LinAlg;
-// or
-LinAlg::Matrix m(3, 3);
+
+int main() {
+    // Create a 3x3 matrix
+    Matrix A = {{4, 1, 1}, {1, 4, 1}, {1, 1, 4}};
+    std::vector<double> b = {6, 6, 6};
+
+    // Solve Ax = b
+    std::vector<double> x = LinearSolver::solve(A, b);
+
+    // Print result
+    VectorOps::print(x);
+    return 0;
+}
 ```
 
-### Matrix Class
+## File Formats
 
-```cpp
-// Constructors
-Matrix(int rows, int cols, double initialValue = 0.0);
-Matrix(const std::vector<std::vector<double>>& data);
-Matrix(std::initializer_list<std::initializer_list<double>> list);
-
-// Access (bounds-checked)
-double& at(int r, int c);
-
-// Access (unchecked, faster)
-double& operator()(int r, int c);
-
-// File I/O
-void saveCSV(const std::string& filename) const;
-static Matrix loadCSV(const std::string& filename);
-
-// Manipulation
-Matrix submatrix(int startRow, int startCol, int numRows, int numCols) const;
-static Matrix hstack(const Matrix& A, const Matrix& B);
-static Matrix vstack(const Matrix& A, const Matrix& B);
-void resize(int newRows, int newCols, double fillValue = 0.0);
-
-// Element-wise
-Matrix hadamard(const Matrix& other) const;
-Matrix applyFunction(std::function<double(double)> func) const;
-
-// Comparison
-bool operator==(const Matrix& other) const;
-bool operator!=(const Matrix& other) const;
-```
-
-## Notes & Limitations
-
-- For best results with eigendecomposition, symmetric matrices are recommended
-- Power iteration finds the eigenvalue with largest absolute value
-- Cholesky decomposition requires symmetric positive-definite matrices
-- SVD uses Golub-Kahan bidiagonalization for numerically stable computation
-- Use verbose mode (Option 9) to understand algorithm behavior and see step-by-step execution
-- File I/O uses standard CSV format (comma-separated, no headers)
+-   **CSV**: Standard comma-separated values for dense matrices.
+-   **Matrix Market (.mtx)**: Industry-standard format for sparse and dense matrices, supporting coordinate and array formats.
