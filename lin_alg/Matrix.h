@@ -81,6 +81,9 @@ public:
     
     // Friend functions for scalar multiplication (scalar * Matrix)
     friend Matrix operator*(double scalar, const Matrix& mat);
+
+    // Helpers
+    static double epsilon() { return 1e-10; } // Placeholder for now, can be made dynamic later
 };
 
 } // namespace LinAlg

@@ -78,7 +78,7 @@ const double& Matrix::operator()(int r, int c) const {
 bool Matrix::operator==(const Matrix& other) const {
     if (rows != other.rows || cols != other.cols) return false;
     for (int i = 0; i < rows * cols; ++i) {
-        if (std::abs(data[i] - other.data[i]) > 1e-10) return false;
+        if (std::abs(data[i] - other.data[i]) > epsilon()) return false;
     }
     return true;
 }
@@ -326,7 +326,7 @@ int Matrix::rank() const {
             }
         }
         
-        if (std::abs(M.data[sel * cols + col]) < 1e-10) continue;
+        if (std::abs(M.data[sel * cols + col]) < epsilon()) continue;
         
         // Swap rows
         for (int j = 0; j < cols; ++j) {
@@ -396,11 +396,11 @@ double Matrix::conditionNumber() const {
         for(int i=0; i<minDim; ++i) {
             double s = S(i,i);
             if(s > maxSv) maxSv = s;
-            if(s < minSv && s > 1e-10) minSv = s; // Avoid zero singular values for singular matrices
+            if (s < minSv && s > epsilon()) minSv = s; // Avoid zero singular values for singular matrices
         }
         
         if (minSv > 1e299) return 1.0/0.0; // Infinity (singular)
-        if (minSv < 1e-10) return 1.0/0.0;
+        if (minSv < epsilon()) return 1.0/0.0;
         
         return maxSv / minSv;
     } catch (...) {

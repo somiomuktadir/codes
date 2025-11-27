@@ -13,59 +13,33 @@ std::vector<double> LinearSolver::solve(const Matrix& A, const std::vector<doubl
     if (A.getCols() != n) throw std::invalid_argument("Matrix must be square");
     if (b.size() != static_cast<size_t>(n)) throw std::invalid_argument("Vector dimension mismatch");
 
-    // Create augmented matrix [A|b]
-    Matrix M = augment(A, b);
+    // Use PLU Decomposition: PA = LU => LUx = Pb
+    auto [P, L, U] = Decomposer::PLU(A);
     
-    // Gaussian Elimination with partial pivoting
-    Logger::getInstance().log("Starting Gaussian Elimination");
-    Logger::getInstance().logStep("Initial Augmented Matrix:");
-
+    // 1. Compute Pb
+    std::vector<double> Pb = Analysis::transform(P, b);
+    
+    // 2. Solve Ly = Pb (Forward substitution)
+    std::vector<double> y(n);
     for (int i = 0; i < n; ++i) {
-        // Pivot
-        int pivot = i;
-        for (int j = i + 1; j < n; ++j) {
-            if (std::abs(M(j, i)) > std::abs(M(pivot, i))) {
-                pivot = j;
-            }
+        double sum = 0;
+        for (int j = 0; j < i; ++j) {
+            sum += L(i, j) * y[j];
         }
-        
-        // Swap rows
-        if (pivot != i) {
-            std::ostringstream oss;
-            oss << "Swapping row " << i << " with row " << pivot;
-            Logger::getInstance().log(oss.str());
-            for (int k = 0; k <= n; ++k) {
-                std::swap(M(i, k), M(pivot, k));
-            }
-        }
-        
-        if (std::abs(M(i, i)) < 1e-10) {
-            throw std::runtime_error("Matrix is singular or nearly singular");
-        }
-        
-        // Eliminate
-        for (int j = i + 1; j < n; ++j) {
-            double factor = M(j, i) / M(i, i);
-            if (std::abs(factor) > 1e-10) {
-                std::ostringstream oss;
-                oss << "R" << j << " = R" << j << " - (" << factor << ") * R" << i;
-                Logger::getInstance().log(oss.str());
-                for (int k = i; k <= n; ++k) {
-                    M(j, k) -= factor * M(i, k);
-                }
-            }
-        }
+        y[i] = (Pb[i] - sum) / L(i, i);
     }
     
-    // Back substitution
-    Logger::getInstance().log("Starting Back Substitution");
+    // 3. Solve Ux = y (Back substitution)
     std::vector<double> x(n);
     for (int i = n - 1; i >= 0; --i) {
         double sum = 0;
         for (int j = i + 1; j < n; ++j) {
-            sum += M(i, j) * x[j];
+            sum += U(i, j) * x[j];
         }
-        x[i] = (M(i, n) - sum) / M(i, i);
+        if (std::abs(U(i, i)) < Matrix::epsilon()) {
+            throw std::runtime_error("Matrix is singular");
+        }
+        x[i] = (y[i] - sum) / U(i, i);
     }
     
     return x;
@@ -75,39 +49,40 @@ double LinearSolver::determinant(const Matrix& A) {
     int n = A.getRows();
     if (A.getCols() != n) throw std::invalid_argument("Matrix must be square");
     
-    Matrix M = A; // Copy
-    double det = 1.0;
-    Logger::getInstance().log("Calculating Determinant using Gaussian Elimination");
+    // det(A) = det(P^-1 * L * U) = det(P)^-1 * det(L) * det(U)
+    // det(P) is +1 or -1 depending on number of swaps.
+    // det(L) is 1 (diagonal is all 1s).
+    // det(U) is product of diagonal elements.
     
+    auto [P, L, U] = Decomposer::PLU(A);
+    
+    double det = 1.0;
     for (int i = 0; i < n; ++i) {
-        int pivot = i;
-        for (int j = i + 1; j < n; ++j) {
-            if (std::abs(M(j, i)) > std::abs(M(pivot, i))) {
-                pivot = j;
-            }
-        }
-        
-        if (pivot != i) {
-            std::ostringstream oss;
-            oss << "Swapping row " << i << " with row " << pivot << " (det sign flips)";
-            Logger::getInstance().log(oss.str());
-            for (int k = 0; k < n; ++k) {
-                std::swap(M(i, k), M(pivot, k));
-            }
-            det *= -1;
-        }
-        
-        if (std::abs(M(i, i)) < 1e-10) return 0.0;
-        
-        det *= M(i, i);
-        
-        for (int j = i + 1; j < n; ++j) {
-            double factor = M(j, i) / M(i, i);
-            for (int k = i; k < n; ++k) {
-                M(j, k) -= factor * M(i, k);
+        det *= U(i, i);
+    }
+    
+    // Calculate sign of permutation
+    // We can count swaps to find det(P). 
+    // Since P is a permutation matrix, det(P) is (-1)^N_swaps.
+    // We can find N_swaps by decomposing P.
+    
+    // Quick det(P) calculation:
+    Matrix P_copy = P;
+    int p_swaps = 0;
+    for(int i=0; i<n; ++i) {
+        if(P_copy(i,i) == 0) {
+            for(int j=i+1; j<n; ++j) {
+                if(P_copy(j,i) != 0) {
+                    // Swap rows i and j
+                    for(int k=0; k<n; ++k) std::swap(P_copy(i,k), P_copy(j,k));
+                    p_swaps++;
+                    break;
+                }
             }
         }
     }
+    
+    if (p_swaps % 2 == 1) det *= -1;
     
     return det;
 }
@@ -116,49 +91,50 @@ Matrix LinearSolver::inverse(const Matrix& A) {
     int n = A.getRows();
     if (A.getCols() != n) throw std::invalid_argument("Matrix must be square");
     
-    Matrix M = augmentIdentity(A);
-    int cols = 2 * n;
-    
-    // Gauss-Jordan
-    Logger::getInstance().log("Starting Gauss-Jordan for Inverse");
-    for (int i = 0; i < n; ++i) {
-        int pivot = i;
-        for (int j = i + 1; j < n; ++j) {
-            if (std::abs(M(j, i)) > std::abs(M(pivot, i))) {
-                pivot = j;
-            }
-        }
-        
-        if (pivot != i) {
-            Logger::getInstance().log("Swapping row " + std::to_string(i) + " with row " + std::to_string(pivot));
-            for (int k = 0; k < cols; ++k) {
-                std::swap(M(i, k), M(pivot, k));
-            }
-        }
-        
-        double pivotVal = M(i, i);
-        if (std::abs(pivotVal) < 1e-10) throw std::runtime_error("Matrix is singular");
-        
-        for (int k = 0; k < cols; ++k) {
-            M(i, k) /= pivotVal;
-        }
-        Logger::getInstance().log("Dividing row " + std::to_string(i) + " by " + std::to_string(pivotVal));
-        
-        for (int j = 0; j < n; ++j) {
-            if (i != j) {
-                double factor = M(j, i);
-                for (int k = 0; k < cols; ++k) {
-                    M(j, k) -= factor * M(i, k);
-                }
-            }
-        }
-    }
-    
-    // Extract inverse
+    // To find A^-1, we solve A * x_i = e_i for each column i of identity matrix
     Matrix Inv(n, n);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            Inv(i, j) = M(i, j + n);
+    Matrix I = Matrix::identity(n);
+    
+    // We can reuse the PLU decomposition for all columns
+    auto [P, L, U] = Decomposer::PLU(A);
+    
+    for (int col = 0; col < n; ++col) {
+        // e_i is the i-th column of I
+        std::vector<double> e(n, 0.0);
+        e[col] = 1.0;
+        
+        // Solve A * x = e
+        // PA = LU => LUx = Pe
+        
+        // 1. Compute Pe
+        std::vector<double> Pe = Analysis::transform(P, e);
+        
+        // 2. Solve Ly = Pe
+        std::vector<double> y(n);
+        for (int i = 0; i < n; ++i) {
+            double sum = 0;
+            for (int j = 0; j < i; ++j) {
+                sum += L(i, j) * y[j];
+            }
+            y[i] = (Pe[i] - sum) / L(i, i);
+        }
+        
+        // 3. Solve Ux = y
+        std::vector<double> x(n);
+        for (int i = n - 1; i >= 0; --i) {
+            double sum = 0;
+            for (int j = i + 1; j < n; ++j) {
+                sum += U(i, j) * x[j];
+            }
+            if (std::abs(U(i, i)) < Matrix::epsilon()) {
+                throw std::runtime_error("Matrix is singular");
+            }
+            x[i] = (y[i] - sum) / U(i, i);
+        }
+        
+        // Store x in Inv
+        for (int i = 0; i < n; ++i) {
+            Inv(i, col) = x[i];
         }
     }
     

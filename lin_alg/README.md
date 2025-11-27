@@ -40,13 +40,15 @@ A comprehensive, high-performance command-line tool for linear algebra operation
 
 ### Decompositions
 - **LU Decomposition**: $A = LU$ factorization with partial pivoting
+  - Also supports PLU decomposition: $PA = LU$ where $P$ is a permutation matrix
 - **Cholesky Decomposition**: $A = LL^T$ for positive-definite matrices
 - **QR Decomposition**: $A = QR$ using Modified Gram-Schmidt orthogonalization
 - **Eigendecomposition**: 
-  - Full eigendecomposition using QR algorithm (handles both symmetric and non-symmetric matrices)
+  - Full eigendecomposition using QR algorithm with Hessenberg reduction
   - Power iteration for dominant eigenvalue/eigenvector
+  - Schur decomposition for upper triangular form
 - **SVD**: Singular Value Decomposition $A = U\Sigma V^T$
-  - ⚠️ Note: Current implementation uses eigendecomposition of $A^TA$ which can lose precision for ill-conditioned matrices
+  - Uses Golub-Kahan Bidiagonalization for improved numerical stability
 - **Diagonalization**: Express $A = PDP^{-1}$ where $D$ is diagonal
 
 ### Analysis & Statistics
@@ -190,10 +192,12 @@ Eigenvectors:
 
 ### Algorithms
 - **Gaussian Elimination**: Partial pivoting for numerical stability
+- **Hessenberg Reduction**: Reduces matrices to Hessenberg form before QR iteration
 - **QR Algorithm**: Iterative Schur decomposition with back-substitution for eigenvectors
 - **Modified Gram-Schmidt**: More numerically stable than classical Gram-Schmidt
 - **Power Iteration**: Rayleigh quotient for dominant eigenvalue estimation
 - **Cholesky**: Specialized factorization for SPD matrices ($O(n^3/3)$ vs $O(2n^3/3)$ for LU)
+- **Golub-Kahan Bidiagonalization**: Two-sided orthogonal reduction for SVD computation
 
 ### Numerical Precision
 - **Tolerance**: `1e-10` for convergence checks
@@ -273,8 +277,8 @@ bool operator!=(const Matrix& other) const;
 - For best results with eigendecomposition, symmetric matrices are recommended
 - Power iteration finds the eigenvalue with largest absolute value
 - Cholesky decomposition requires symmetric positive-definite matrices
-- **SVD Precision**: The current SVD implementation uses eigendecomposition of $A^TA$, which squares the condition number. For ill-conditioned matrices, consider alternative implementations (e.g., Golub-Kahan-Reinsch)
-- Use verbose mode (Option 9) to understand algorithm behavior
+- SVD uses Golub-Kahan bidiagonalization for numerically stable computation
+- Use verbose mode (Option 9) to understand algorithm behavior and see step-by-step execution
 - File I/O uses standard CSV format (comma-separated, no headers)
 
 ## Future Enhancements
@@ -282,10 +286,10 @@ bool operator!=(const Matrix& other) const;
 - Sparse matrix support with CSR/CSC formats
 - GPU acceleration via CUDA or OpenCL
 - BLAS/LAPACK integration for production performance
-- Improved SVD using bidiagonalization
 - Iterative solvers (Conjugate Gradient, GMRES) for large systems
 - Matrix market format support
 - Parallel matrix multiplication
+- Complex matrix support
 
 ## License
 
