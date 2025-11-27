@@ -42,6 +42,16 @@ A series of advanced SQL scripts designed for the Sakila sample database, demons
 -   **`03_procedures_and_triggers.sql`**: Stored procedures and triggers for automating business logic and maintaining data integrity.
 -   **`sakila_insights.sql`**: Comprehensive analytical reports on database contents.
 
+### 5. Probability & Combinatorics Library (`probability/`)
+
+A C++ toolkit for combinatorial mathematics and probability theory. Features an interactive menu for:
+
+-   **Combinatorics**: Permutations, combinations, number sequences (Fibonacci, Catalan), and partitions.
+-   **Probability**: Bayes' theorem, conditional probability, and expected value/variance.
+-   **Distributions**: Support for discrete (Binomial, Poisson) and continuous (Normal, Gamma) distributions.
+
+*For detailed documentation, refer to the [Probability README](probability/README.md).*
+
 ## Usage
 
 ### Compiling C Programs
@@ -68,6 +78,15 @@ Navigate to the `statistics` directory and build the project:
 cd statistics
 make
 ./statistics
+```
+
+### Running the Probability Tool
+Navigate to the `probability` directory and build the project:
+
+```bash
+cd probability
+make
+./bin/combinatorics
 ```
 
 ### Executing SQL Scripts
