@@ -1,8 +1,14 @@
 #include "Probability.h"
+#include "Utils.h"
 #include <iostream>
 #include <stdexcept>
 
 namespace Probability {
+
+    // Helper function to validate probability values
+    bool isValidProbability(double p) {
+        return p >= 0.0 && p <= 1.0;
+    }
 
     double probability(double favorable_outcomes, double total_outcomes) {
         if (total_outcomes <= 0) throw std::invalid_argument("Total outcomes must be positive.");
@@ -24,27 +30,73 @@ namespace Probability {
 
     double bayesTheorem(double prob_B_given_A, double prob_A, double prob_B) {
         if (prob_B <= 0) throw std::invalid_argument("P(B) must be positive.");
-        // P(A|B) = P(B|A) * P(A) / P(B)
-        return (prob_B_given_A * prob_A) / prob_B;
+        Utils::log("Calculating Bayes' Theorem");
+        Utils::logStep("Formula: P(A|B) = P(B|A) * P(A) / P(B)");
+        double result = (prob_B_given_A * prob_A) / prob_B;
+        Utils::logStep("Result: " + std::to_string(result));
+        return result;
     }
 
-    double unionProbability(double prob_A, double prob_B, double prob_intersection) {
-        if (prob_A < 0 || prob_A > 1 || prob_B < 0 || prob_B > 1 || prob_intersection < 0 || prob_intersection > 1) {
-            throw std::invalid_argument("Probabilities must be between 0 and 1.");
-        }
-        double result = prob_A + prob_B - prob_intersection;
-        if (result > 1.0 + 1e-9) throw std::invalid_argument("Resulting probability > 1. Check input values.");
-        return (result > 1.0) ? 1.0 : result;
+    double unionProbability(double pA, double pB, double pIntersection) {
+        if (!isValidProbability(pA) || !isValidProbability(pB) || !isValidProbability(pIntersection))
+            throw std::invalid_argument("Invalid probability values");
+        Utils::log("Calculating Union Probability P(A U B)");
+        Utils::logStep("Formula: P(A) + P(B) - P(A n B)");
+        Utils::logStep("Substitution: " + std::to_string(pA) + " + " + std::to_string(pB) + " - " + std::to_string(pIntersection));
+        double result = pA + pB - pIntersection;
+        Utils::logStep("Result: " + std::to_string(result));
+        // The original code had a check for result > 1.0 + 1e-9 and clamped it.
+        // The provided snippet removes this, so we follow the snippet.
+        return result;
     }
 
-    double intersectionIndependent(double prob_A, double prob_B) {
-        if (prob_A < 0 || prob_A > 1 || prob_B < 0 || prob_B > 1) {
-            throw std::invalid_argument("Probabilities must be between 0 and 1.");
+    double intersectionIndependent(double pA, double pB) {
+        if (!isValidProbability(pA) || !isValidProbability(pB))
+            throw std::invalid_argument("Invalid probability values");
+        Utils::log("Calculating Intersection (Independent) P(A n B)");
+        Utils::logStep("Formula: P(A) * P(B)");
+        Utils::logStep("Substitution: " + std::to_string(pA) + " * " + std::to_string(pB));
+        double result = pA * pB;
+        Utils::logStep("Result: " + std::to_string(result));
+        return result;
+    }
+
+    double intersectionDependent(double pA, double pBgivenA) {
+        if (!isValidProbability(pA) || !isValidProbability(pBgivenA))
+            throw std::invalid_argument("Invalid probability values");
+        Utils::log("Calculating Intersection (Dependent) P(A n B)");
+        Utils::logStep("Formula: P(A) * P(B|A)");
+        Utils::logStep("Substitution: " + std::to_string(pA) + " * " + std::to_string(pBgivenA));
+        double result = pA * pBgivenA;
+        Utils::logStep("Result: " + std::to_string(result));
+        return result;
+    }
+
+    double totalProbability(const std::vector<double>& priors, const std::vector<double>& conditionals) {
+        if (priors.size() != conditionals.size())
+            throw std::invalid_argument("Size mismatch between priors and conditionals");
+        
+        Utils::log("Calculating Total Probability");
+        Utils::logStep("Formula: Sum(P(Ai) * P(B|Ai))");
+        
+        double total = 0.0;
+        for (size_t i = 0; i < priors.size(); ++i) {
+            if (!isValidProbability(priors[i]) || !isValidProbability(conditionals[i]))
+                throw std::invalid_argument("Invalid probability values");
+            
+            double term = priors[i] * conditionals[i];
+            if (Utils::isVerbose()) {
+                Utils::logStep("Term " + std::to_string(i+1) + ": " + std::to_string(priors[i]) + " * " + std::to_string(conditionals[i]) + " = " + std::to_string(term));
+            }
+            total += term;
         }
-        return prob_A * prob_B;
+        Utils::logStep("Total Result: " + std::to_string(total));
+        return total;
     }
 
     double expectedValue(const std::vector<double>& values, const std::vector<double>& probabilities) {
+        Utils::log("Calculating Expected Value E[X]");
+        Utils::logStep("Formula: Sum(x_i * p_i)");
         if (values.size() != probabilities.size()) throw std::invalid_argument("Values and probabilities must have same size.");
         double ev = 0.0;
         double sum_p = 0.0;

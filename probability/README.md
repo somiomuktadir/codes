@@ -25,27 +25,35 @@ A comprehensive C++ command-line tool for calculating combinatorics, probability
 - **Conditional Probability**: P(A|B)
 - **Bayes' Theorem**: Calculate posterior probability
 - **Union Probability**: P(A U B)
-- **Intersection**: P(A n B) for independent events
+- **Intersection (Independent)**: P(A n B) for independent events
+- **Intersection (Dependent)**: P(A n B) = P(A) × P(B|A) for dependent events
+- **Total Probability**: Law of total probability for partitioned events
 - **Expected Value**: Mean of a discrete random variable
 - **Variance**: Measure of spread for a discrete random variable
 
 ### Distributions
 **Discrete:**
-- **Binomial**: Number of successes in n independent Bernoulli trials
-- **Poisson**: Number of events in a fixed interval
-- **Geometric**: Number of trials to get the first success
-- **Hypergeometric**: Sampling without replacement
-- **Negative Binomial**: Trials to achieve r successes
+- **Binomial**: Number of successes in n independent Bernoulli trials (PMF, CDF, Mean, Variance)
+- **Poisson**: Number of events in a fixed interval (PMF, CDF, Mean, Variance)
+- **Geometric**: Number of trials to get the first success (PMF, CDF, Mean, Variance)
+- **Hypergeometric**: Sampling without replacement (PMF, Mean, Variance)
+- **Negative Binomial**: Trials to achieve r successes (PMF, Mean, Variance)
 
 **Continuous:**
-- **Uniform**: Constant probability density
-- **Normal (Gaussian)**: Bell curve distribution
-- **Exponential**: Time between events in a Poisson process
-- **Gamma**: Generalization of Exponential distribution
-- **Beta**: Defined on interval [0, 1]
-- **Chi-Square**: Sum of squared standard normals
-- **Student's t**: Estimating mean of normally distributed population
-- **F-Distribution**: Ratio of two chi-square distributions
+- **Uniform**: Constant probability density (PDF, CDF, Mean, Variance, StdDev)
+- **Normal (Gaussian)**: Bell curve distribution (PDF, CDF, Variance, StdDev)
+- **Exponential**: Time between events in a Poisson process (PDF, CDF, Mean, Variance, StdDev)
+- **Gamma**: Generalization of Exponential distribution (PDF, Mean, Variance, StdDev)
+- **Beta**: Defined on interval [0, 1] (PDF, Mean, Variance, StdDev)
+- **Chi-Square**: Sum of squared standard normals (PDF, Mean, Variance, StdDev)
+- **Student's t**: Estimating mean of normally distributed population (PDF, Mean, Variance, StdDev)
+- **F-Distribution**: Ratio of two chi-square distributions (PDF, Mean, Variance, StdDev)
+
+### Verbose Mode
+- **Toggle Verbose Logging**: Enable/disable step-by-step calculation details
+- **Formula Display**: Shows mathematical formulas being applied
+- **Intermediate Steps**: Displays parameter substitution and calculation progression
+- **Educational Tool**: Helps users understand the computation process
 
 ## Building the Project
 
@@ -70,11 +78,27 @@ make clean
 
 ## Usage
 
-Run the executable from the `combinatorics` directory:
+Run the executable from the `probability` directory:
 
 ```bash
-./bin/combinatorics
+./bin/probability
 ```
+
+### Main Menu Options
+1. **Combinatorics** - Access all combinatorial calculations
+2. **Probability** - Basic and advanced probability calculations
+3. **Distributions** - Discrete and continuous distribution functions
+4. **Toggle Verbose Mode** - Enable/disable step-by-step calculation display
+0. **Exit** - Close the application
+
+### Using Verbose Mode
+When verbose mode is enabled, the calculator will display:
+- Mathematical formulas being applied
+- Parameter substitution steps
+- Intermediate calculation results
+- Final answers with context
+
+This feature is particularly helpful for educational purposes and understanding how calculations are performed.
 
 Follow the on-screen menu to select modules and perform calculations.
 

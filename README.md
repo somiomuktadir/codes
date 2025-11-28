@@ -44,11 +44,12 @@ A series of advanced SQL scripts designed for the Sakila sample database, demons
 
 ### 5. Probability & Combinatorics Library (`probability/`)
 
-A C++ toolkit for combinatorial mathematics and probability theory. Features an interactive menu for:
+A comprehensive C++ toolkit for combinatorial mathematics and probability theory with verbose logging capabilities. Features an interactive menu for:
 
--   **Combinatorics**: Permutations, combinations, number sequences (Fibonacci, Catalan), and partitions.
--   **Probability**: Bayes' theorem, conditional probability, and expected value/variance.
--   **Distributions**: Support for discrete (Binomial, Poisson) and continuous (Normal, Gamma) distributions.
+-   **Combinatorics**: Permutations, combinations, number sequences (Fibonacci, Catalan, Lucas), derangements, and partitions.
+-   **Probability**: Basic probability, Bayes' theorem, conditional probability, union/intersection (both independent and dependent), total probability, expected value, and variance.
+-   **Distributions**: Full statistical support for discrete (Binomial, Poisson, Geometric, Hypergeometric, Negative Binomial) and continuous (Uniform, Normal, Exponential, Gamma, Beta, Chi-Square, Student's t, F-Distribution) distributions with PDF/PMF, CDF, Mean, Variance, and Standard Deviation.
+-   **Verbose Mode**: Toggle step-by-step calculation display showing formulas, parameter substitution, and intermediate results for educational purposes.
 
 *For detailed documentation, refer to the [Probability README](probability/README.md).*
 
@@ -86,7 +87,7 @@ Navigate to the `probability` directory and build the project:
 ```bash
 cd probability
 make
-./bin/combinatorics
+./bin/probability
 ```
 
 ### Executing SQL Scripts

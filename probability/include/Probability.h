@@ -21,7 +21,9 @@ namespace Probability {
     
     // Independent Events
     // P(A n B) = P(A) * P(B)
-    double intersectionIndependent(double prob_A, double prob_B);
+    double intersectionIndependent(double pA, double pB);
+    double intersectionDependent(double pA, double pBgivenA); // New feature
+    double totalProbability(const std::vector<double>& priors, const std::vector<double>& conditionals); // New feature
 
     // Random Variables
     double expectedValue(const std::vector<double>& values, const std::vector<double>& probabilities);

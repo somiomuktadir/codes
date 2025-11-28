@@ -132,9 +132,11 @@ namespace Menu {
             std::cout << "4. Bayes' Theorem\n";
             std::cout << "5. Union Probability P(A U B)\n";
             std::cout << "6. Intersection (Independent Events)\n";
-            std::cout << "7. Expected Value (Discrete RV)\n";
-            std::cout << "8. Variance (Discrete RV)\n";
-            std::cout << "9. View Formulas\n";
+            std::cout << "7. Intersection (Dependent Events)\n";
+            std::cout << "8. Total Probability\n";
+            std::cout << "9. Expected Value (Discrete RV)\n";
+            std::cout << "10. Variance (Discrete RV)\n";
+            std::cout << "11. View Formulas\n";
             std::cout << "0. Back to Main Menu\n";
 
             int choice = Utils::getIntInput("Select option: ");
@@ -173,16 +175,31 @@ namespace Menu {
                     std::cout << "Result: " << Probability::intersectionIndependent(pa, pb) << std::endl;
                 }
                 else if (choice == 7) {
+                    double pa = Utils::getDoubleInput("Enter P(A): ");
+                    double pba = Utils::getDoubleInput("Enter P(B|A): ");
+                    std::cout << "Result: " << Probability::intersectionDependent(pa, pba) << std::endl;
+                }
+                else if (choice == 8) {
+                    int n = Utils::getIntInput("Enter number of events: ");
+                    std::vector<double> priors;
+                    std::vector<double> conditionals;
+                    for (int i = 0; i < n; ++i) {
+                        priors.push_back(Utils::getDoubleInput("Enter P(A" + std::to_string(i+1) + "): "));
+                        conditionals.push_back(Utils::getDoubleInput("Enter P(B|A" + std::to_string(i+1) + "): "));
+                    }
+                    std::cout << "Result: " << Probability::totalProbability(priors, conditionals) << std::endl;
+                }
+                else if (choice == 9) {
                     std::vector<double> vals = Utils::getVectorInput("Enter values (x): ");
                     std::vector<double> probs = Utils::getVectorInput("Enter probabilities (p): ");
                     std::cout << "Expected Value: " << Probability::expectedValue(vals, probs) << std::endl;
                 }
-                else if (choice == 8) {
+                else if (choice == 10) {
                     std::vector<double> vals = Utils::getVectorInput("Enter values (x): ");
                     std::vector<double> probs = Utils::getVectorInput("Enter probabilities (p): ");
                     std::cout << "Variance: " << Probability::variance(vals, probs) << std::endl;
                 }
-                else if (choice == 9) {
+                else if (choice == 11) {
                     Probability::printFormulas();
                 }
                 else {
@@ -267,6 +284,8 @@ namespace Menu {
                     std::cout << "PDF f(x): " << Distributions::Continuous::uniformPDF(a, b, x) << std::endl;
                     std::cout << "CDF F(x): " << Distributions::Continuous::uniformCDF(a, b, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::uniformMean(a, b) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::uniformVariance(a, b) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::uniformStdDev(a, b) << std::endl;
                 }
                 else if (choice == 7) {
                     double m = Utils::getDoubleInput("Enter mean: ");
@@ -274,6 +293,8 @@ namespace Menu {
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::normalPDF(m, s, x) << std::endl;
                     std::cout << "CDF F(x): " << Distributions::Continuous::normalCDF(m, s, x) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::normalVariance(s) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::normalStdDev(s) << std::endl;
                 }
                 else if (choice == 8) {
                     double l = Utils::getDoubleInput("Enter lambda: ");
@@ -281,6 +302,8 @@ namespace Menu {
                     std::cout << "PDF f(x): " << Distributions::Continuous::exponentialPDF(l, x) << std::endl;
                     std::cout << "CDF F(x): " << Distributions::Continuous::exponentialCDF(l, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::exponentialMean(l) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::exponentialVariance(l) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::exponentialStdDev(l) << std::endl;
                 }
                 else if (choice == 9) {
                     double k = Utils::getDoubleInput("Enter shape (k): ");
@@ -288,6 +311,8 @@ namespace Menu {
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::gammaPDF(k, theta, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::gammaMean(k, theta) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::gammaVariance(k, theta) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::gammaStdDev(k, theta) << std::endl;
                 }
                 else if (choice == 10) {
                     double alpha = Utils::getDoubleInput("Enter alpha: ");
@@ -295,18 +320,24 @@ namespace Menu {
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::betaPDF(alpha, beta, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::betaMean(alpha, beta) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::betaVariance(alpha, beta) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::betaStdDev(alpha, beta) << std::endl;
                 }
                 else if (choice == 11) {
                     int k = Utils::getIntInput("Enter degrees of freedom (k): ");
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::chiSquarePDF(k, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::chiSquareMean(k) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::chiSquareVariance(k) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::chiSquareStdDev(k) << std::endl;
                 }
                 else if (choice == 12) {
                     int v = Utils::getIntInput("Enter degrees of freedom (v): ");
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::studentTPDF(v, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::studentTMean(v) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::studentTVariance(v) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::studentTStdDev(v) << std::endl;
                 }
                 else if (choice == 13) {
                     int d1 = Utils::getIntInput("Enter d1: ");
@@ -314,6 +345,8 @@ namespace Menu {
                     double x = Utils::getDoubleInput("Enter value (x): ");
                     std::cout << "PDF f(x): " << Distributions::Continuous::fDistributionPDF(d1, d2, x) << std::endl;
                     std::cout << "Mean: " << Distributions::Continuous::fDistributionMean(d1, d2) << std::endl;
+                    std::cout << "Variance: " << Distributions::Continuous::fDistributionVariance(d1, d2) << std::endl;
+                    std::cout << "StdDev: " << Distributions::Continuous::fDistributionStdDev(d1, d2) << std::endl;
                 }
                 else if (choice == 14) {
                     Distributions::printFormulas();
@@ -337,6 +370,7 @@ namespace Menu {
             std::cout << "1. Combinatorics\n";
             std::cout << "2. Probability\n";
             std::cout << "3. Distributions\n";
+            std::cout << "4. Toggle Verbose Mode (" << (Utils::isVerbose() ? "ON" : "OFF") << ")\n";
             std::cout << "0. Exit\n";
             
             int choice = Utils::getIntInput("Select module: ");
@@ -348,6 +382,10 @@ namespace Menu {
             else if (choice == 1) showCombinatoricsMenu();
             else if (choice == 2) showProbabilityMenu();
             else if (choice == 3) showDistributionsMenu();
+            else if (choice == 4) {
+                Utils::setVerbose(!Utils::isVerbose());
+                pause();
+            }
             else {
                 std::cout << "Invalid option. Please try again.\n";
                 pause();

@@ -44,43 +44,51 @@ namespace Distributions {
         double uniformCDF(double a, double b, double x);
         double uniformMean(double a, double b);
         double uniformVariance(double a, double b);
+        double uniformStdDev(double a, double b);
 
         // Normal (Gaussian): f(x) = (1 / (sigma * sqrt(2pi))) * e^(-(x-mu)^2 / (2sigma^2))
         double normalPDF(double mean, double stdDev, double x);
         double normalCDF(double mean, double stdDev, double x); // Uses error function
         double normalMean(double mean);
-        double normalVariance(double stdDev);
+        double normalVariance(double stdDev); // Variance = stdDev^2
+        double normalStdDev(double stdDev);   // Just returns stdDev, for consistency
 
         // Exponential: f(x) = lambda * e^(-lambda * x) for x >= 0
         double exponentialPDF(double lambda, double x);
         double exponentialCDF(double lambda, double x);
         double exponentialMean(double lambda);
         double exponentialVariance(double lambda);
+        double exponentialStdDev(double lambda);
 
         // Gamma: f(x) = (x^(k-1) * e^(-x/theta)) / (theta^k * Gamma(k))
         double gammaPDF(double k, double theta, double x);
         double gammaMean(double k, double theta);
         double gammaVariance(double k, double theta);
+        double gammaStdDev(double k, double theta);
 
         // Beta: f(x) = (x^(alpha-1) * (1-x)^(beta-1)) / B(alpha, beta)
         double betaPDF(double alpha, double beta, double x);
         double betaMean(double alpha, double beta);
         double betaVariance(double alpha, double beta);
+        double betaStdDev(double alpha, double beta);
 
         // Chi-Square: Special case of Gamma
         double chiSquarePDF(int k, double x);
         double chiSquareMean(int k);
         double chiSquareVariance(int k);
+        double chiSquareStdDev(int k);
 
         // Student's t
         double studentTPDF(int v, double x);
         double studentTMean(int v);
         double studentTVariance(int v);
+        double studentTStdDev(int v);
 
         // F-Distribution
         double fDistributionPDF(int d1, int d2, double x);
         double fDistributionMean(int d1, int d2);
         double fDistributionVariance(int d1, int d2);
+        double fDistributionStdDev(int d1, int d2);
     }
 
     void printFormulas();

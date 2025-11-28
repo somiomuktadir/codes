@@ -2,8 +2,36 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <limits> // Added for std::numeric_limits
 
 namespace Utils {
+
+    static bool verboseMode = false;
+
+    void setVerbose(bool verbose) {
+        verboseMode = verbose;
+        if (verboseMode) {
+            std::cout << "[INFO] Verbose mode enabled.\n";
+        } else {
+            std::cout << "[INFO] Verbose mode disabled.\n";
+        }
+    }
+
+    bool isVerbose() {
+        return verboseMode;
+    }
+
+    void log(const std::string& message) {
+        if (verboseMode) {
+            std::cout << "[LOG] " << message << "\n";
+        }
+    }
+
+    void logStep(const std::string& step) {
+        if (verboseMode) {
+            std::cout << "  -> " << step << "\n";
+        }
+    }
 
     bool isInteger(double value) {
         return std::abs(value - std::round(value)) < EPSILON;

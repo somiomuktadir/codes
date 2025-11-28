@@ -7,15 +7,46 @@
 namespace Combinatorics {
 
     unsigned long long factorial(int n) {
-        return Utils::factorial(n);
+        if (n < 0) throw std::invalid_argument("Factorial undefined for negative numbers");
+        Utils::log("Calculating Factorial of " + std::to_string(n));
+        unsigned long long result = 1;
+        std::string step = "";
+        for (int i = 1; i <= n; ++i) {
+            result *= i;
+            if (Utils::isVerbose()) {
+                if (i == 1) {
+                    step = std::to_string(i);
+                } else {
+                    step += " × " + std::to_string(i);
+                }
+            }
+        }
+        if (Utils::isVerbose() && n > 0) {
+            Utils::logStep(std::to_string(n) + "! = " + step + " = " + std::to_string(result));
+        } else if (Utils::isVerbose()) {
+            Utils::logStep("0! = 1");
+        }
+        return result;
     }
 
     unsigned long long permutations(int n, int r) {
-        return Utils::nPr(n, r);
+        if (n < 0 || r < 0 || r > n) throw std::invalid_argument("Invalid n or r for permutations");
+        Utils::log("Calculating Permutations nPr: n=" + std::to_string(n) + ", r=" + std::to_string(r));
+        Utils::logStep("Formula: n! / (n-r)!");
+        Utils::logStep("Substitution: " + std::to_string(n) + "! / (" + std::to_string(n) + "-" + std::to_string(r) + ")!");
+        unsigned long long result = Utils::nPr(n, r);
+        Utils::logStep("Result: " + std::to_string(result));
+        return result;
     }
 
     unsigned long long combinations(int n, int r) {
-        return Utils::nCr(n, r);
+        if (n < 0 || r < 0 || r > n) throw std::invalid_argument("Invalid n or r for combinations");
+        Utils::log("Calculating Combinations nCr: n=" + std::to_string(n) + ", r=" + std::to_string(r));
+        Utils::logStep("Formula: n! / (r! × (n-r)!)");
+        Utils::logStep("Substitution: " + std::to_string(n) + "! / (" + std::to_string(r) + "! × " + std::to_string(n-r) + "!)");
+        unsigned long long result = Utils::nCr(n, r);
+        Utils::logStep("Result: " + std::to_string(result));
+        return result;
     }
 
     unsigned long long permutationsWithRepetition(int n, const std::vector<int>& repetitions) {

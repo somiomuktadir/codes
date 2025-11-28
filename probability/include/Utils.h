@@ -30,6 +30,12 @@ namespace Utils {
     double getDoubleInput(const std::string& prompt);
     int getIntInput(const std::string& prompt);
     std::vector<double> getVectorInput(const std::string& prompt);
+
+    // Logging
+    void setVerbose(bool verbose);
+    bool isVerbose();
+    void log(const std::string& message);
+    void logStep(const std::string& step);
 }
 
 #endif // UTILS_H
