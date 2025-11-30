@@ -53,6 +53,14 @@ public:
     Matrix operator-(const Matrix& other) const;
     Matrix operator*(const Matrix& other) const;
     Matrix operator*(double scalar) const;
+    
+    // Compound assignment operators (New)
+    Matrix& operator+=(const Matrix& other);
+    Matrix& operator-=(const Matrix& other);
+    Matrix& operator*=(double scalar);
+    // Note: operator*=(const Matrix&) is not typically element-wise, so we avoid it to prevent confusion, 
+    // or implement it as matrix multiplication (which changes dimensions, so maybe not safe for inplace).
+
     Matrix transpose() const;
     
     // Element-wise operations
@@ -79,6 +87,16 @@ public:
     Matrix rref() const;
     double conditionNumber() const;
     
+    // Helpers (New)
+    bool isSquare() const;
+    bool isSymmetric(double tol = 1e-10) const;
+    
+    // Iterators (New)
+    std::vector<double>::iterator begin() { return data.begin(); }
+    std::vector<double>::iterator end() { return data.end(); }
+    std::vector<double>::const_iterator begin() const { return data.begin(); }
+    std::vector<double>::const_iterator end() const { return data.end(); }
+    
     // Utilities
     static Matrix identity(int n);
     void print() const;
@@ -87,7 +105,7 @@ public:
     friend Matrix operator*(double scalar, const Matrix& mat);
 
     // Helpers
-    static double epsilon() { return 1e-10; } // Placeholder for now, can be made dynamic later
+    static double epsilon() { return 1e-10; }
 };
 
 } // namespace LinAlg

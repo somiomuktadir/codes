@@ -21,7 +21,7 @@ DEFINES =
 
 # Check for BLAS/LAPACK
 ifneq ($(shell ldconfig -p | grep -q libblas && echo $$?),0)
-    HAS_BLAS := $(shell echo "int main(){return 0;}" | $(CXX) -x c++ - -lblas 2>/dev/null && echo yes || echo no)
+    HAS_BLAS := $(shell echo "int main(){return 0;}" | $(CXX) -x c++ - -lblas -o /dev/null 2>/dev/null && echo yes || echo no)
     ifeq ($(HAS_BLAS),yes)
         LIBS += -lblas -llapack
         DEFINES += -DUSE_BLAS -DUSE_LAPACK
@@ -32,7 +32,7 @@ ifneq ($(shell ldconfig -p | grep -q libblas && echo $$?),0)
 endif
 
 # Check for OpenMP
-HAS_OPENMP := $(shell echo "int main(){return 0;}" | $(CXX) -x c++ -fopenmp - 2>/dev/null && echo yes || echo no)
+HAS_OPENMP := $(shell echo "int main(){return 0;}" | $(CXX) -x c++ -fopenmp - -o /dev/null 2>/dev/null && echo yes || echo no)
 ifeq ($(HAS_OPENMP),yes)
     CXXFLAGS += -fopenmp
     $(info [INFO] OpenMP support enabled for parallel matrix multiplication)

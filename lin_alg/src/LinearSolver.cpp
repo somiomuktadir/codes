@@ -142,18 +142,41 @@ Matrix LinearSolver::inverse(const Matrix& A) {
 Matrix LinearSolver::pseudoInverse(const Matrix& A) {
     // Moore-Penrose Pseudo-Inverse using SVD
     // A^+ = V * S^+ * U^T
+    // where S^+ is diagonal with 1/sigma_i for sigma_i > epsilon, else 0
+    
+    Logger::getInstance().log("Computing Moore-Penrose Pseudo-Inverse");
+    
     auto [U, S, V] = Decomposer::SVD(A);
     
-    Matrix S_plus(A.getCols(), A.getRows()); // Transpose dimensions
-    double tolerance = 1e-10 * std::max(A.getRows(), A.getCols()) * S.at(0, 0);
+    Matrix S_plus(S.getCols(), S.getRows()); // Transpose dimensions
+    double tol = std::max(A.getRows(), A.getCols()) * S(0,0) * Matrix::epsilon();
     
-    for (int i = 0; i < std::min(S.getRows(), S.getCols()); ++i) {
-        if (S.at(i, i) > tolerance) {
-            S_plus.at(i, i) = 1.0 / S.at(i, i);
+    int minDim = std::min(S.getRows(), S.getCols());
+    for (int i = 0; i < minDim; ++i) {
+        if (S(i, i) > tol) {
+            S_plus(i, i) = 1.0 / S(i, i);
         }
     }
     
+    Logger::getInstance().log("Moore-Penrose Pseudo-Inverse completed");
+    
     return V * S_plus * U.transpose();
+}
+
+std::vector<double> LinearSolver::solvePseudoInverse(const Matrix& A, const std::vector<double>& b) {
+    Matrix A_pinv = pseudoInverse(A);
+    
+    // Convert b to Matrix (column vector)
+    Matrix B(b.size(), 1);
+    for(size_t i=0; i<b.size(); ++i) B(i, 0) = b[i];
+    
+    Matrix X = A_pinv * B;
+    
+    // Convert back to vector
+    std::vector<double> x(X.getRows());
+    for(int i=0; i<X.getRows(); ++i) x[i] = X(i, 0);
+    
+    return x;
 }
 
 Matrix LinearSolver::power(const Matrix& A, int n) {

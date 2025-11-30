@@ -13,25 +13,29 @@ public:
     // Solves Ax = b using Gaussian Elimination with partial pivoting
     static std::vector<double> solve(const Matrix& A, const std::vector<double>& b);
     
-    // Iterative refinement for better accuracy
-    static std::vector<double> solveRefined(const Matrix& A, const std::vector<double>& b, int maxIter = 5);
-
-    // Least Squares: Solve A * x = b (approx) for overdetermined systems
-    static std::vector<double> leastSquares(const Matrix& A, const std::vector<double>& b);
-    
-    // Solves Ax = b for symmetric positive-definite systems using Cholesky decomposition
+    // Solves Ax = b using Cholesky decomposition (requires A to be SPD)
     static std::vector<double> solveCholesky(const Matrix& A, const std::vector<double>& b);
     
-    // Calculates determinant using Gaussian Elimination to upper triangular form
+    // Least Squares solution for overdetermined systems (Ax = b)
+    // Returns x that minimizes ||Ax - b||
+    static std::vector<double> leastSquares(const Matrix& A, const std::vector<double>& b);
+    
+    // Iterative refinement to improve solution accuracy
+    static std::vector<double> solveRefined(const Matrix& A, const std::vector<double>& b, int maxIter = 5);
+    
+    // Generalized Inverse (Moore-Penrose Pseudo-Inverse)
+    static Matrix pseudoInverse(const Matrix& A);
+    
+    // Solve using Pseudo-Inverse (works for any matrix)
+    static std::vector<double> solvePseudoInverse(const Matrix& A, const std::vector<double>& b);
+
+    // Determinant (using LU decomposition)
     static double determinant(const Matrix& A);
     
-    // Calculates inverse using Gauss-Jordan Elimination
+    // Inverse (using LU decomposition)
     static Matrix inverse(const Matrix& A);
-
-    // Calculates pseudo-inverse using SVD
-    static Matrix pseudoInverse(const Matrix& A);
-
-    // Matrix power
+    
+    // Power of a matrix
     static Matrix power(const Matrix& A, int n);
 
 private:

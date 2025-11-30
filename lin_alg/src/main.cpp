@@ -14,6 +14,7 @@
 #include "IterativeSolvers.h"
 #include "Statistics.h"
 #include "ComplexMatrix.h"
+#include "QuadraticForm.h"
 
 using namespace LinAlg;
 
@@ -70,7 +71,7 @@ void printMenu() {
     std::cout << "3. Linear Solver (Ax = b)" << std::endl;
     std::cout << "4. Determinant, Inverse & Pseudo-Inverse" << std::endl;
     std::cout << "5. Decompositions (LU, Cholesky, QR, Eigen, SVD, Diagonalization)" << std::endl;
-    std::cout << "6. Analysis (PCA, Rank, Trace)" << std::endl;
+    std::cout << "6. Analysis (PCA, Rank, Trace, Quadratic Form)" << std::endl;
     std::cout << "7. Statistics (Mean, Variance, Covariance, Correlation)" << std::endl;
     std::cout << "8. Matrix Manipulation (Submatrix, Stack, Hadamard)" << std::endl;
     std::cout << "9. Toggle Verbose Mode (Current: " << (Logger::getInstance().isEnabled() ? "ON" : "OFF") << ")" << std::endl;
@@ -237,7 +238,7 @@ int main() {
                     break;
                 }
                 case 6: { // Analysis
-                    std::cout << "1. PCA  2. Rank  3. Trace  4. Condition Number" << std::endl;
+                    std::cout << "1. PCA  2. Rank  3. Trace  4. Condition Number  5. Quadratic Form" << std::endl;
                     int sub; std::cin >> sub;
                     if (sub == 1) {
                         Matrix X = inputMatrix("Data Matrix X (rows=samples, cols=features)");
@@ -255,6 +256,21 @@ int main() {
                     } else if (sub == 4) {
                         Matrix A = inputMatrix("Matrix A");
                         std::cout << "Condition Number: " << A.conditionNumber() << std::endl;
+                    } else if (sub == 5) {
+                        Matrix A = inputMatrix("Symmetric Matrix A");
+                        std::vector<double> x = inputVector("Vector x");
+                        try {
+                            double val = QuadraticForm::evaluate(A, x);
+                            std::cout << "Value (x^T A x): " << val << std::endl;
+                            
+                            auto def = QuadraticForm::analyzeDefiniteness(A);
+                            std::cout << "Definiteness: " << QuadraticForm::definitenessToString(def) << std::endl;
+                            
+                            std::cout << "Canonical Form (Eigenvalues):" << std::endl;
+                            QuadraticForm::canonicalForm(A).print();
+                        } catch (const std::exception& e) {
+                            std::cout << "Error: " << e.what() << std::endl;
+                        }
                     }
                     break;
                 }

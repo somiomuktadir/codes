@@ -105,7 +105,7 @@ Matrix Matrix::operator+(const Matrix& other) const {
         throw std::invalid_argument("Matrix dimensions must match for addition");
     }
     Matrix result(rows, cols);
-    for (int i = 0; i < rows * cols; ++i) {
+    for (size_t i = 0; i < data.size(); ++i) {
         result.data[i] = data[i] + other.data[i];
     }
     return result;
@@ -116,7 +116,7 @@ Matrix Matrix::operator-(const Matrix& other) const {
         throw std::invalid_argument("Matrix dimensions must match for subtraction");
     }
     Matrix result(rows, cols);
-    for (int i = 0; i < rows * cols; ++i) {
+    for (size_t i = 0; i < data.size(); ++i) {
         result.data[i] = data[i] - other.data[i];
     }
     return result;
@@ -124,33 +124,20 @@ Matrix Matrix::operator-(const Matrix& other) const {
 
 Matrix Matrix::operator*(const Matrix& other) const {
     if (cols != other.rows) {
-        throw std::invalid_argument("Matrix dimensions incompatible for multiplication");
+        throw std::invalid_argument("Matrix dimensions must match for multiplication");
     }
     Matrix result(rows, other.cols);
-    
-#ifdef USE_BLAS
-    // Use BLAS cblas_dgemm for matrix multiplication: C = alpha*A*B + beta*C
-    // result = 1.0 * this * other + 0.0 * result
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
-                rows, other.cols, cols,
-                1.0, data.data(), cols,
-                other.data.data(), other.cols,
-                0.0, result.data.data(), result.cols);
-#else
-    // Native implementation with optional OpenMP parallelization
-    #ifdef _OPENMP
-    #pragma omp parallel for schedule(static) if(rows > 100 && other.cols > 100)
-    #endif
+    // Optimized multiplication (ikj loop order for cache locality)
     for (int i = 0; i < rows; ++i) {
         for (int k = 0; k < cols; ++k) {
-            double aik = data[i * cols + k];
-            for (int j = 0; j < other.cols; ++j) {
-                result.data[i * other.cols + j] += aik * other.data[k * other.cols + j];
+            double r = this->at(i, k);
+            if (std::abs(r) > 1e-15) { // Skip zero elements
+                for (int j = 0; j < other.cols; ++j) {
+                    result(i, j) += r * other(k, j);
+                }
             }
         }
     }
-#endif
-    
     return result;
 }
 
@@ -332,6 +319,22 @@ void Matrix::print() const {
 
 Matrix operator*(double scalar, const Matrix& mat) {
     return mat * scalar;
+}
+
+bool Matrix::isSquare() const {
+    return rows == cols;
+}
+
+bool Matrix::isSymmetric(double tol) const {
+    if (!isSquare()) return false;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = i + 1; j < cols; ++j) {
+            if (std::abs(at(i, j) - at(j, i)) > tol) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 double Matrix::trace() const {
